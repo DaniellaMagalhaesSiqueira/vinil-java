@@ -1,6 +1,5 @@
 package gui;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -15,6 +14,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
+import model.services.ArtistaService;
 
 public class MainViewController implements Initializable{
 	@FXML
@@ -35,9 +35,10 @@ public class MainViewController implements Initializable{
 	}
 	@FXML
 	public void onMenuItemArtistaAction() {
-		System.out.println("onArtistaAction");
+		loadView2("/gui/ListaArtistas.fxml");
 		
 	}
+
 	@FXML
 	public void onMenuItemAlbumAction() {
 		System.out.println("onAlbumAction");
@@ -67,7 +68,28 @@ public class MainViewController implements Initializable{
 			mainVBox.getChildren().addAll(newVBox.getChildren());
 			
 			
-		}catch(IOException e) {
+		}catch(Exception e) {
+			System.out.println(e);
+			Alerts.showAlert("IOException", "Erro ao carregar a página", e.getMessage(), AlertType.ERROR);
+		}
+	}
+	
+	private synchronized void loadView2(String absolutName) {
+		try {			
+			FXMLLoader loader = new FXMLLoader(getClass().getResource(absolutName));
+			VBox newVBox = loader.load();
+			Scene mainScene = Main.getMainScene();
+			VBox mainVBox = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
+			Node mainMenu = mainVBox.getChildren().get(0);
+			mainVBox.getChildren().clear();
+			mainVBox.getChildren().add(mainMenu);
+			mainVBox.getChildren().addAll(newVBox.getChildren());
+			ListaArtistaController controller = loader.getController();
+			controller.setArtistaService(new ArtistaService());
+			controller.updateTableView();
+			
+		}catch(Exception e) {
+			System.out.println(e);
 			Alerts.showAlert("IOException", "Erro ao carregar a página", e.getMessage(), AlertType.ERROR);
 		}
 	}
