@@ -67,7 +67,8 @@ public class MainViewController implements Initializable{
 			mainVBox.getChildren().addAll(newVBox.getChildren());
 			
 			
-		}catch(IOException e) {
+		}catch(Exception e) {
+			System.out.println(e);
 			Alerts.showAlert("IOException", "Erro ao carregar a página", e.getMessage(), AlertType.ERROR);
 		}
 	}
