@@ -2,35 +2,35 @@ package model.entities;
 
 import java.io.Serializable;
 
-public class Artista implements Serializable{
+public class Artista implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
-	private Long id;
-	private String name;
-	
+
+	private Integer id;
+	private String nome;
+
 	public Artista() {
-		
+
 	}
 
-	public Artista(Long id, String name) {
+	public Artista(Integer id, String nome) {
 		this.id = id;
-		this.name = name;
+		this.nome = nome;
 	}
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getNome() {
+		return nome;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class Artista implements Serializable{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
 		return result;
 	}
 
@@ -56,18 +56,17 @@ public class Artista implements Serializable{
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (name == null) {
-			if (other.name != null)
+		if (nome == null) {
+			if (other.nome != null)
 				return false;
-		} else if (!name.equals(other.name))
+		} else if (!nome.equals(other.nome))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Artista [id=" + id + ", name=" + name + "]";
+		return "Artista [id=" + id + ", nome=" + nome + "]";
 	}
-	
-	
+
 }
