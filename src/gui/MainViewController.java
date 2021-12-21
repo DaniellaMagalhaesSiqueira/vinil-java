@@ -2,6 +2,7 @@ package gui;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 import application.Main;
 import gui.util.Alerts;
@@ -35,7 +36,11 @@ public class MainViewController implements Initializable{
 	}
 	@FXML
 	public void onMenuItemArtistaAction() {
-		loadView2("/gui/ListaArtistas.fxml");
+		//segundo parâmetro é uma função para inicializar o controlador
+		loadView("/gui/ListaArtistas.fxml", (ListaArtistaController controller) -> {
+			controller.setArtistaService(new ArtistaService());
+			controller.updateTableView();
+		});
 		
 	}
 
@@ -46,7 +51,7 @@ public class MainViewController implements Initializable{
 	}
 	@FXML
 	public void onMenuItemSobreAction() {
-		loadView("/gui/Sobre.fxml");
+		loadView("/gui/Sobre.fxml", x ->{});
 		
 	}
 	
@@ -56,7 +61,7 @@ public class MainViewController implements Initializable{
 		
 	}
 	
-	private synchronized void loadView(String absolutName) {
+	private synchronized <T> void loadView(String absolutName, Consumer<T> initializeAction) {
 		try {			
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absolutName));
 			VBox newVBox = loader.load();
@@ -66,6 +71,9 @@ public class MainViewController implements Initializable{
 			mainVBox.getChildren().clear();
 			mainVBox.getChildren().add(mainMenu);
 			mainVBox.getChildren().addAll(newVBox.getChildren());
+			
+			T controller = loader.getController();
+			initializeAction.accept(controller);
 			
 			
 		}catch(Exception e) {
@@ -74,24 +82,6 @@ public class MainViewController implements Initializable{
 		}
 	}
 	
-	private synchronized void loadView2(String absolutName) {
-		try {			
-			FXMLLoader loader = new FXMLLoader(getClass().getResource(absolutName));
-			VBox newVBox = loader.load();
-			Scene mainScene = Main.getMainScene();
-			VBox mainVBox = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
-			Node mainMenu = mainVBox.getChildren().get(0);
-			mainVBox.getChildren().clear();
-			mainVBox.getChildren().add(mainMenu);
-			mainVBox.getChildren().addAll(newVBox.getChildren());
-			ListaArtistaController controller = loader.getController();
-			controller.setArtistaService(new ArtistaService());
-			controller.updateTableView();
-			
-		}catch(Exception e) {
-			System.out.println(e);
-			Alerts.showAlert("IOException", "Erro ao carregar a página", e.getMessage(), AlertType.ERROR);
-		}
-	}
+
 
 }
